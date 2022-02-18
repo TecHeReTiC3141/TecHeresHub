@@ -1,0 +1,12 @@
+USE site_data;
+
+CREATE TABLE IF NOT EXISTS site_pages (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) UNIQUE,
+    url VARCHAR(100) UNIQUE
+);
+
+INSERT INTO site_pages (name, url) VALUES
+("Mainpage", "/mainpage");
+
+SELECT * FROM site_pages;
