@@ -2,6 +2,7 @@ import sqlite3
 import time
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 class UDataBase:
 
     def __init__(self, db: sqlite3.Connection):
@@ -70,4 +71,7 @@ class UDataBase:
             return False
         print(password)
         return check_password_hash(user_info['password'], password)
+
+    def top_users(self):
+        pass
 
