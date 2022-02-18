@@ -1,0 +1,17 @@
+{% extends 'reqister_form.html' -%}
+
+{% block content -%}
+    <form action="{{ url_for('add_post') }}" method="post" class="info_form">
+    {% for cat, mes in get_flashed_messages(True) -%}
+    <p class="flash {{ cat }}">{{ mes }}</p>
+    {% endfor -%}
+    <p><label>Author:</label></p>
+    <input type="text" placeholder="Enter Your Name" name="author" required>
+    <p><label>Title:</label></p>
+    <input type="text" name="title">
+    <p><label>Text: </label></p>
+    <p><textarea name="post" rows="7" cols="40"></textarea></p>
+    <input type="submit" value="Send" name="submission">
+</form>
+<a href="{{ url_for('to_main') }}"> To main </a>
+{% endblock -%}

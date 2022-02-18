@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% macro corr_title(title) -%}
+{% if title -%}
+ {{ title }}
+{% else -%}
+ Nothing here
+{% endif -%}
+{%- endmacro -%}
+
+{% block head -%}
+<head>
+    <meta charset="UTF-8">
+    <base href="">
+    <title>{{ corr_title(title) }}</title>
+    <link type="text/css" href=" {{ url_for('static', filename='css/header_appear.css') }}" rel="stylesheet">
+    <link type="text/css" href=" {{ url_for('static', filename='css/footer_appear.css') }}" rel="stylesheet">
+</head>
+{% endblock -%}
+
+<body>
+
+{% block header -%}
+<header>
+    <p>My personal page</p>
+</header>
+{% endblock -%}
+<div class="content">
+    {% block content %} {% endblock content -%}
+</div>
+
+
+{% block footer %}
+{% include 'footer.html' -%}
+{% endblock footer -%}
+
+

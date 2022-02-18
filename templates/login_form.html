@@ -1,0 +1,32 @@
+{% extends 'header.html' -%}
+{% block head -%}
+{{ super() }}
+<link type="text/css" href=" {{ url_for('static', filename='css/register_form_appear.css') }} "
+      rel="stylesheet">
+{% endblock head -%}
+
+{% block header -%}
+{{ super() }}
+{% endblock header -%}
+
+{% block content %}
+{{ super() }}
+<form action="/login" method="post" class="info_form">
+    {% for cat, mes in get_flashed_messages(True) -%}
+    <p class="flash {{ cat }}">{{ mes }}</p>
+    {% endfor -%}
+    <p><label>Name:</label></p>
+    <input type="text" placeholder="Enter Your Name" name="name" required>
+    <p><label>E-mail:</label></p>
+    <input type="email" placeholder="Your mail@" name="email" required>
+    <p><label>Password:</label></p>
+    <input type="password" name="password" required> <br>
+    <input type="checkbox" name="remainme"> Remain me <br>
+    <input type="submit" value="Send" name="submission">
+</form>
+<p>Not registered yet? <a href="{{ url_for('register') }}">Create account</a></p>
+{% endblock -%}
+
+{% block footer -%}
+{{ super() }}
+{% endblock -%}

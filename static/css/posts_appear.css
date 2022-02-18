@@ -1,0 +1,11 @@
+div.post {
+    background: beige;
+    padding-bottom: .5em;
+    border: aquamarine solid 2px;
+    margin-bottom: 2em;
+}
+div.post > a.post_title {
+    padding-left: 20px;
+    background: lightblue;
+    font-family: "DejaVu Sans", serif;
+}

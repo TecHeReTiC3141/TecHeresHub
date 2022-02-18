@@ -1,0 +1,17 @@
+h1.name {
+    color: #FF0000;
+    font-family: Ubuntu, FreeMono;
+}
+
+h1.name:hover {
+    text-decoration: underline;
+}
+
+p.id {
+    font-size: large;
+    color: blue;
+}
+
+div.greeting {
+    margin: 10px;
+}

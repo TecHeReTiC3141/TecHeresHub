@@ -1,0 +1,26 @@
+{% extends 'title_templ.html' -%}
+
+{% block head -%}
+    {{ super() }}
+    <link type="text/css" href="{{ url_for('static', filename='css/posts_appear.css') }}" rel="stylesheet">
+{% endblock -%}
+
+{% block content -%}
+    {{ super() }}
+    {% if user_name -%}
+        <h2 class="greeting"> Hello, {{ user_name }}</h2>
+    {% else -%}
+        <p>Hello, somebody. <a href="{{ url_for('login') }}">Login</a>
+            or <a href="{{ url_for('register') }}">register</a> please</p>
+    {% endif -%}
+    <p>Don't idle. View new posts or <a href="/addpost">create your own</a>! Times visited {{ times }}</p>
+    <h3>Latest posts</h3>
+    {% for post in posts -%}
+        <div class="post">
+            <a class="post_title" href="{{ url_for('get_post', id=post.id) }}"> {{ post['title'] }} by {{ post['author'] }}</a>
+            <p class="text"> {{ post['text'][:50]}}...</p>
+            <p>It has been visited {{ post['visited'] }} times</p>
+        </div>
+
+    {% endfor -%}
+{% endblock -%}

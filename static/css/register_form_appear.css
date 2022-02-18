@@ -1,0 +1,31 @@
+form {
+    padding: 20px 20px;
+    border: solid 1px black;
+    background: rgba(244, 164, 96, 0.65);
+}
+
+.flash {
+    padding-bottom: 10px;
+}
+
+.flash.success {
+    background: greenyellow;
+    border: solid 1px yellowgreen;
+    font-family: Ubuntu, serif;
+}
+
+.flash.error {
+    background: red;
+    border: solid 1px black;
+    font-family: Ubuntu, serif;
+}
+
+label {
+    text-decoration: underline red;
+    font-family: Ubuntu, serif;
+    padding-bottom: .5em;
+}
+
+input {
+    padding-bottom: .5em;
+}

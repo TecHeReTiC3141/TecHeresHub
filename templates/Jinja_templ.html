@@ -1,0 +1,22 @@
+{% include 'header.html' -%}
+{% macro info_about(objs) -%}
+
+{% for obj in objs -%}
+<ol>
+    <li>{{ obj['Name'] }} </li>
+{{ caller(obj) }}
+</ol>
+{% endfor -%}
+
+{%endmacro -%}
+
+
+{% call(user) info_about(users) -%}
+{% for i in user -%}
+{% if i != 'Name' -%}
+<li> {{ i }}: {{ user[i] }} </li>
+{% endif -%}
+{% endfor -%}
+{% endcall %}
+
+{% include 'footer.html' %}

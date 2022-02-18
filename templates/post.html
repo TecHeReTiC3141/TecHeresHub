@@ -1,0 +1,7 @@
+{% extends 'title_templ.html' -%}
+
+{% block content -%}
+    {{ super() }}
+    <p> {{ post['text'] }}</p>
+    <h2><a href=" {{ url_for('index', user_name=post['author']) }} ">by {{ post['author'] }}</a></h2>
+{% endblock -%}

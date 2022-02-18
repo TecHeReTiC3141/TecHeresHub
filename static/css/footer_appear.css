@@ -1,0 +1,10 @@
+footer {
+    background: lightgrey;
+    padding-bottom: 20px;
+    padding-top: 5px;
+    border: solid 1px #27282c;
+}
+
+footer > h4 {
+    padding-left: .5em;
+}
