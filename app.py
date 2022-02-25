@@ -1,23 +1,21 @@
-import time
-import random
 import sqlite3
 import os
-from TecHeresHub.scripts.UDataBase import UDataBase
-from string import ascii_letters, digits, ascii_lowercase
+import sqlite3
+from string import ascii_letters, digits
 
 from flask import Flask, render_template, url_for, request, session, g, flash, \
     abort, redirect, make_response
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
-DATABASE = "TecHeresHub/tmp/sql/users.db"
-DEBUG = True
-SECRET_KEY = hex(random.randint(1000000, 10000000000000000))
+from TecHeresHub.scripts.Config import Config
+from TecHeresHub.scripts.UDataBase import UDataBase
+from TecHeresHub.scripts.Forms import LoginForm, RegisterForm
 
 app = Flask(__name__)
-app.config.from_object(__name__)
+app.config.from_object(Config)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'TecHeresHub/tmp/sql/users.db')))
-db = None
+
 print(app.config['DATABASE'])
 
 
@@ -25,6 +23,9 @@ def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
     conn.row_factory = sqlite3.Row
     return conn
+
+
+db = UDataBase(connect_db())
 
 
 def create_db():
@@ -74,8 +75,10 @@ def to_main():
 @app.route('/greeting/<user_name>')
 @app.route('/greeting/<user_name>/<int:id>')
 def index(user_name='Tec', id=3141):
-    print(url_for('index', user_name=user_name, id=id))
-    return render_template('user_greeting.html', user_name=user_name, user_id=id)
+
+    posts = db.show_users_posts(user_name) if user_name == session.get('logged') else None
+    print(posts, user_name, session.get('logged'))
+    return render_template('user_greeting.html', user_name=user_name, user_id=id, posts=posts)
 
 
 @app.route('/topusers')
@@ -108,43 +111,50 @@ def get_post(id):
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    log = ''
+
+    form = LoginForm()
     print(session.get('logged'))
     if session.get('logged'):
         return redirect(url_for('index', user_name=session['logged']))
-    res = make_response(render_template('login_form.html'))
-    if request.method == 'POST':
-        if not db.check_login(request.form['email'], request.form['name'],
-                              request.form['password']):
+    res = make_response(render_template('login_form.html', form=form))
+    if form.validate_on_submit():
+        print(form.email.data)
+        chpass, name = db.check_login(form.email.data,
+                                      form.password.data)
+        if not chpass:
             flash('Wrong email/password', category='error')
             return res
         else:
-            session['logged'] = str(request.form['name'])
+            session['logged'] = str(name)
+            return redirect(url_for('index', user_name=session['logged']))
     return res
 
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == 'POST':
-        if request.form['password1'] != request.form['password2']:
+    form = RegisterForm()
+    if session.get('logged'):
+        return redirect(url_for('index', user_name=session['logged']))
+    if form.validate_on_submit():
+        if form.password.data != form.repeat_password.data:
             flash("Passwords don't match themselves", category='error')
         else:
-            for i in request.form['name']:
+            for i in form.name.data:
                 if i not in ascii_letters + digits:
                     flash('Incorrect name', category='error')
                     break
             else:
                 flash('Sent successfully', category='success')
 
-                res = db.add_user(request.form['email'], request.form['name'],
-                                  generate_password_hash(request.form['password1']))
+                res = db.add_user(form.email.data, form.name.data,
+                                  generate_password_hash(form.password.data))
                 if res:
                     session['logged'] = request.form['name']
                     return redirect(url_for('index', user_name=request.form['name']))
                 else:
                     flash('Such user already exists', category='error')
 
-    return render_template('reqister_form.html', title='Register form')
+    return render_template('reqister_form.html', title='Register form', form=form)
 
 
 if __name__ == '__main__':

@@ -10,6 +10,20 @@ rel="stylesheet">
 <div class="content">
     <h1 class="name">Hello {{ user_name }}!</h1>
     <p class="id"> Your id is {{ user_id }} </p>
+    {% if posts %}
+        <table>
+            <caption>Your best posts</caption>
+            <th>title</th>
+            <th>times seen</th>
+            {% for title, visited in posts %}
+            <tr>
+                <td>{{ title }}</td>
+                <td>{{ visited }}</td>
+
+            </tr>
+            {%  endfor %}
+        </table>
+    {% endif %}
     <p>Go to <a href="/mainpage">main page</a></p>
 </div>
 

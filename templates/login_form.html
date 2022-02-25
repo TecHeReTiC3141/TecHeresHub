@@ -11,18 +11,25 @@
 
 {% block content %}
 {{ super() }}
-<form action="/login" method="post" class="info_form">
+<form action=" {{ url_for('login') }}" method="post" class="info_form" novalidate>
+    {{ form.hidden_tag() }}
     {% for cat, mes in get_flashed_messages(True) -%}
     <p class="flash {{ cat }}">{{ mes }}</p>
     {% endfor -%}
-    <p><label>Name:</label></p>
-    <input type="text" placeholder="Enter Your Name" name="name" required>
-    <p><label>E-mail:</label></p>
-    <input type="email" placeholder="Your mail@" name="email" required>
-    <p><label>Password:</label></p>
-    <input type="password" name="password" required> <br>
-    <input type="checkbox" name="remainme"> Remain me <br>
-    <input type="submit" value="Send" name="submission">
+    <p><label>{{  form.email.label }}</label> <br>
+        {{  form.email(size=32) }}
+        {% for error in form.email.errors -%}
+        <span style="color: red">  {{ error }}</span>
+        {% endfor -%}
+    </p>
+    <p><label>{{ form.password.label }}</label> <br>
+        {{ form.password(size=32) }}
+        {% for error in form.password.errors -%}
+        <span style="color: red">  {{ error }}</span>
+        {% endfor -%}
+    </p>
+    {{ form.remainme(size=20) }} {{ form.remainme.label }} <br>
+    {{ form.submit(size=20) }}
 </form>
 <p>Not registered yet? <a href="{{ url_for('register') }}">Create account</a></p>
 {% endblock -%}

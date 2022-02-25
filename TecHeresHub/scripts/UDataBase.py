@@ -64,13 +64,19 @@ class UDataBase:
         self.db.commit()
         return True
 
-    def check_login(self, email, name, password):
+    def check_login(self, email, password):
         user_info = self.cur.execute('''SELECT *
-        FROM users_score WHERE mail = ? AND name = ?''', (email, name)).fetchone()
+        FROM users_score WHERE mail = ?''', (email,)).fetchone()
         if user_info is None:
             return False
         print(password)
-        return check_password_hash(user_info['password'], password)
+        return check_password_hash(user_info['password'], password), user_info['name']
+
+    def show_users_posts(self, user_name):
+        users_posts = self.cur.execute('''SELECT title, visited FROM users_posts
+                                            WHERE author = ?
+                                            ORDER BY visited DESC''', (user_name,))
+        return users_posts
 
     def top_users(self):
         pass
