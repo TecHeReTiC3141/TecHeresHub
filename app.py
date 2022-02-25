@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'TecHeresHub/tmp/sql/users.db')))
-db = None
+
 print(app.config['DATABASE'])
 
 
@@ -23,6 +23,9 @@ def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
     conn.row_factory = sqlite3.Row
     return conn
+
+
+db = UDataBase(connect_db())
 
 
 def create_db():
@@ -72,8 +75,10 @@ def to_main():
 @app.route('/greeting/<user_name>')
 @app.route('/greeting/<user_name>/<int:id>')
 def index(user_name='Tec', id=3141):
-    print(url_for('index', user_name=user_name, id=id))
-    return render_template('user_greeting.html', user_name=user_name, user_id=id)
+
+    posts = db.show_users_posts(user_name) if user_name == session.get('logged') else None
+    print(posts, user_name, session.get('logged'))
+    return render_template('user_greeting.html', user_name=user_name, user_id=id, posts=posts)
 
 
 @app.route('/topusers')

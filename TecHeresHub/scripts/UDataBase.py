@@ -72,6 +72,12 @@ class UDataBase:
         print(password)
         return check_password_hash(user_info['password'], password), user_info['name']
 
+    def show_users_posts(self, user_name):
+        users_posts = self.cur.execute('''SELECT title, visited FROM users_posts
+                                            WHERE author = ?
+                                            ORDER BY visited DESC''', (user_name,))
+        return users_posts
+
     def top_users(self):
         pass
 
