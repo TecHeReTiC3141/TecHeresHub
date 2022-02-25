@@ -11,7 +11,7 @@
 
 {% block content %}
 {{ super() }}
-<form action="/login" method="post" class="info_form" novalidate>
+<form action=" {{ url_for('login') }}" method="post" class="info_form" novalidate>
     {{ form.hidden_tag() }}
     {% for cat, mes in get_flashed_messages(True) -%}
     <p class="flash {{ cat }}">{{ mes }}</p>

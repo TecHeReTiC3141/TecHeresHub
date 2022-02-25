@@ -9,7 +9,7 @@ from werkzeug.security import generate_password_hash
 
 from TecHeresHub.scripts.Config import Config
 from TecHeresHub.scripts.UDataBase import UDataBase
-from TecHeresHub.scripts.Forms import LoginForm
+from TecHeresHub.scripts.Forms import LoginForm, RegisterForm
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -127,26 +127,29 @@ def login():
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    if request.method == 'POST':
-        if request.form['password1'] != request.form['password2']:
+    form = RegisterForm()
+    if session.get('logged'):
+        return redirect(url_for('index', user_name=session['logged']))
+    if form.validate_on_submit():
+        if form.password.data != form.repeat_password.data:
             flash("Passwords don't match themselves", category='error')
         else:
-            for i in request.form['name']:
+            for i in form.name.data:
                 if i not in ascii_letters + digits:
                     flash('Incorrect name', category='error')
                     break
             else:
                 flash('Sent successfully', category='success')
 
-                res = db.add_user(request.form['email'], request.form['name'],
-                                  generate_password_hash(request.form['password1']))
+                res = db.add_user(form.email.data, form.name.data,
+                                  generate_password_hash(form.password.data))
                 if res:
                     session['logged'] = request.form['name']
                     return redirect(url_for('index', user_name=request.form['name']))
                 else:
                     flash('Such user already exists', category='error')
 
-    return render_template('reqister_form.html', title='Register form')
+    return render_template('reqister_form.html', title='Register form', form=form)
 
 
 if __name__ == '__main__':

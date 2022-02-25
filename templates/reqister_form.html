@@ -1,3 +1,4 @@
+
 {% extends 'header.html' -%}
 {% block head -%}
 {{ super() }}
@@ -11,21 +12,48 @@
 
 {% block content %}
 {{ super() }}
-<form action="{{ url_for('register') }}" method="post" class="info_form">
+<form action="{{ url_for('register') }}" method="post" class="info_form" novalidate>
+    {{ form.hidden_tag() }}
     {% for cat, mes in get_flashed_messages(True) -%}
     <p class="flash {{ cat }}">{{ mes }}</p>
     {% endfor -%}
-    <p><label>Name:</label></p>
-    <input type="text" placeholder="Enter Your Name" name="name" required>
-    <p><label>Date of birth:</label></p>
-    <input type="date" name="birth">
-    <p><label>E-mail:</label></p>
-    <input type="email" name="email">
-    <p><label>Password:</label></p>
-    <input type="password" name="password1"> <br>
-    <p><label>Repeat password:</label></p>
-    <input type="password" name="password2"> <br>
-    <input type="submit" value="Send" name="submission">
+    <p><label> {{ form.name.label }}</label>
+        {{ form.name(size=32) }}
+        {% for err in form.name.errors %}
+            <span>{{ err }}</span>
+        {%  endfor %}
+
+    </p>
+    <p><label> {{ form.birthdate.label }}</label>
+        {{ form.birthdate(size=32) }}
+        {% for err in form.birthdate.errors %}
+            <span>{{ err }}</span>
+        {%  endfor %}
+    </p>
+
+
+    <p><label> {{ form.email.label }}</label>
+        {{ form.email(size=32) }}
+        {% for err in form.email.errors %}
+            <span>{{ err }}</span>
+        {%  endfor %}
+
+    </p>
+    <p><label> {{ form.password.label }}</label>
+        {{ form.password(size=32) }}
+        {% for err in form.password.errors %}
+            <span>{{ err }}</span>
+        {%  endfor %}
+
+    </p>
+    <p><label> {{ form.repeat_password.label }}</label>
+        {{ form.repeat_password(size=32) }}
+        {% for err in form.repeat_password.errors %}
+            <span>{{ err }}</span>
+        {%  endfor %}
+
+    </p>
+    {{ form.submit(size=32) }}
 </form>
 
 {% endblock -%}
