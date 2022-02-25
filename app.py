@@ -1,20 +1,18 @@
-import time
-import random
 import sqlite3
 import os
-from TecHeresHub.scripts.UDataBase import UDataBase
-from string import ascii_letters, digits, ascii_lowercase
+import sqlite3
+from string import ascii_letters, digits
 
 from flask import Flask, render_template, url_for, request, session, g, flash, \
     abort, redirect, make_response
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
-DATABASE = "TecHeresHub/tmp/sql/users.db"
-DEBUG = True
-SECRET_KEY = hex(random.randint(1000000, 10000000000000000))
+from TecHeresHub.scripts.Config import Config
+from TecHeresHub.scripts.UDataBase import UDataBase
+from TecHeresHub.scripts.Forms import LoginForm
 
 app = Flask(__name__)
-app.config.from_object(__name__)
+app.config.from_object(Config)
 
 app.config.update(dict(DATABASE=os.path.join(app.root_path, 'TecHeresHub/tmp/sql/users.db')))
 db = None
@@ -108,18 +106,22 @@ def get_post(id):
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    log = ''
+
+    form = LoginForm()
     print(session.get('logged'))
     if session.get('logged'):
         return redirect(url_for('index', user_name=session['logged']))
-    res = make_response(render_template('login_form.html'))
-    if request.method == 'POST':
-        if not db.check_login(request.form['email'], request.form['name'],
-                              request.form['password']):
+    res = make_response(render_template('login_form.html', form=form))
+    if form.validate_on_submit():
+        print(form.email.data)
+        chpass, name = db.check_login(form.email.data,
+                                      form.password.data)
+        if not chpass:
             flash('Wrong email/password', category='error')
             return res
         else:
-            session['logged'] = str(request.form['name'])
+            session['logged'] = str(name)
+            return redirect(url_for('index', user_name=session['logged']))
     return res
 
 
