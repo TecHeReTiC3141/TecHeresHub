@@ -5,6 +5,8 @@ from string import ascii_letters, digits
 
 from flask import Flask, render_template, url_for, request, session, g, flash, \
     abort, redirect, make_response
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 
 from TecHeresHub.scripts.Config import Config
@@ -14,8 +16,9 @@ from TecHeresHub.scripts.Forms import LoginForm, RegisterForm
 app = Flask(__name__)
 app.config.from_object(Config)
 
-app.config.update(dict(DATABASE=os.path.join(app.root_path, 'TecHeresHub/tmp/sql/users.db')))
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 print(app.config['DATABASE'])
 
 
@@ -23,9 +26,6 @@ def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
     conn.row_factory = sqlite3.Row
     return conn
-
-
-db = UDataBase(connect_db())
 
 
 def create_db():
