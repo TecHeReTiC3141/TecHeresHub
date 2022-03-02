@@ -3,7 +3,6 @@ import time
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-
 class UDataBase:
 
     def __init__(self, db: sqlite3.Connection):

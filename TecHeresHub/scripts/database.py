@@ -16,7 +16,7 @@ SECRET_KEY = hex(random.randint(1000000, 10000000000000000))
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-app.config.update(dict(DATABASE=os.path.join(app.root_path, '../tmp/sql/users.db')))
+app.config.update(dict(DATABASE=os.path.join(app.root_path, 'tmp/sql/users.db')))
 db = None
 print(app.config['DATABASE'])
 
